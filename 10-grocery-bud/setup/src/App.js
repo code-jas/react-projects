@@ -34,6 +34,7 @@ function App() {
         })
       )
       setName('')
+
       setEditID(null);
       setIsEditing(false);
       showAlert(true, 'success', 'value changed')
@@ -43,6 +44,9 @@ function App() {
       const newItem = { id: new Date().getTime().toString(), title: name }
       setList([...list, newItem])
       setName('')
+      e.target.reset();
+
+
     }
 
   }
@@ -68,10 +72,18 @@ function App() {
   // this function will edit single item from the list
   const editItem = (id) => {
     const specificItem = list.find((item) => item.id === id);
+    const inputText = document.getElementById('inp');
     setIsEditing(true)
     setEditID(id)
     setName(specificItem.title)
+    console.log(id)
+    inputText.value = specificItem.title
+
   }
+
+  useEffect(() => {
+    localStorage.setItem('list', JSON.stringify(list))
+  }, [list]);
   return (
     <section className="section-center">
       <form className="grocery-form" onSubmit={handleSubmit}>
@@ -81,10 +93,12 @@ function App() {
         <h3>grocery bud</h3>
         <div className="form-control">
           <input
+            id='inp'
             type='text'
             className='grocery'
             placeholder='e.g. eggs'
             onChange={(e) => setName(e.target.value)}
+
           />
           <button type='submit' className='submit-btn'>
             {isEditing ? 'edit' : 'submit'}
